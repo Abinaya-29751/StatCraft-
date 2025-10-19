@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Analyzer - AI Powered Analytics</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    
+    <style>
+    /* INLINE CSS - NO CACHING ISSUES */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { color: #333; font-size: 2.5em; margin-bottom: 10px; }
+    .subtitle { color: #666; font-size: 1.1em; }
+    
+    .upload-section {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .upload-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .upload-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 60px;
+        background: white;
+        border: 3px dashed #667eea;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-label:hover { background: #f0f4ff; border-color: #5568d3; }
+    .upload-icon { font-size: 3em; margin-bottom: 10px; }
+    .upload-text { font-size: 1.1em; color: #667eea; font-weight: 600; }
+    
+    .analyze-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .analyze-btn:hover { transform: translateY(-2px); }
+    .file-info { color: #666; font-size: 0.9em; margin-top: 10px; }
+    
+    .loading {
+        text-align: center;
+        padding: 60px 20px;
+        display: none;
+    }
+    
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #667eea;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .results { display: none; }
+    
+    .section {
+        margin: 40px 0;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 5px solid #667eea;
+    }
+    
+    .section h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+    
+    /* INSIGHTS STYLING */
+    #insightsContent {
+        background: white;
+        padding: 35px;
+        border-radius: 10px;
+        line-height: 1.9;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .insight-title {
+        color: #667eea;
+        font-size: 2em;
+        margin: 25px 0 15px 0;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .insight-section {
+        color: #764ba2;
+        font-size: 1.5em;
+        margin: 25px 0 15px 0;
+        padding-left: 12px;
+        border-left: 5px solid #764ba2;
+        font-weight: 600;
+    }
+    
+    .insight-subsection {
+        color: #555;
+        font-size: 1.3em;
+        margin: 20px 0 10px 0;
+        font-weight: 600;
+    }
+    
+    .insight-text {
+        color: #444;
+        margin: 15px 0;
+        line-height: 1.8;
+    }
+    
+    .insight-list {
+        margin: 15px 0 15px 30px;
+        list-style: none;
+    }
+    
+    .insight-list li {
+        margin: 12px 0;
+        padding-left: 25px;
+        position: relative;
+        line-height: 1.8;
+        color: #555;
+    }
+    
+    .insight-list li:before {
+        content: "▸";
+        color: #667eea;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .insight-bold {
+        color: #667eea;
+        font-weight: 600;
+    }
+    
+    .insight-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #667eea, transparent);
+        margin: 30px 0;
+    }
+    
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card h3 {
+        color: #667eea;
+        font-size: 2em;
+        margin-bottom: 5px;
+    }
+    
+    .stat-card p { color: #666; font-size: 0.9em; }
+    
+    .stats-details {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+    
+    .table-wrapper {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 30px;
+    }
+    
+    .chart-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+        white-space: nowrap;
+    }
+    
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+        min-width: 120px;
+    }
+    
+    th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+    }
+    
+    tr:hover { background: #f5f5f5; }
+    
+    @media (max-width: 768px) {
+        .container { padding: 20px; }
+        h1 { font-size: 1.8em; }
+        .charts-grid { grid-template-columns: 1fr; }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Automated Dataset Analyzer</h1>
+            <p class="subtitle">Upload your dataset and get AI-powered insights instantly</p>
+        </header>
+        
+        <div class="upload-section">
+            <div class="upload-box">
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+                <label for="fileInput" class="upload-label">
+                    <span class="upload-icon">📁</span>
+                    <span class="upload-text">Choose CSV or Excel File</span>
+                </label>
+                <button class="analyze-btn" onclick="uploadFile()">Analyze Dataset</button>
+            </div>
+            <p class="file-info" id="fileInfo">No file selected</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your dataset...</p>
+        </div>
+        
+        <div id="results" class="results">
+            <section class="section insights-section">
+                <h2> AI-Generated Insights</h2>
+                <div id="insightsContent"></div>
+            </section>
+            
+            <section class="section stats-section">
+                <h2> Statistical Analysis</h2>
+                <div id="statsOverview" class="stats-overview"></div>
+                <div id="statsDetails" class="stats-details"></div>
+            </section>
+            
+            <section class="section charts-section">
+                <h2> Visualizations</h2>
+                <div id="chartsContainer" class="charts-grid"></div>
+            </section>
+            
+            <section class="section preview-section">
+                <h2> Data Preview (First 10 Rows)</h2>
+                <div id="previewContent" class="table-wrapper"></div>
+            </section>
+        </div>
+    </div>
+    
+    <script>
+    // INLINE JAVASCRIPT - NO CACHING ISSUES
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+            document.getElementById('fileInfo').textContent = `Selected: ${file.name} (${fileSize} MB)`;
+        }
+    });
+
+    async function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            alert('⚠️ Please select a file first!');
+            return;
+        }
+        
+        const validExtensions = ['csv', 'xlsx', 'xls'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+        if (!validExtensions.includes(fileExtension)) {
+            alert('⚠️ Please upload a CSV or Excel file!');
+            return;
+        }
+        
+        if (file.size > 200 * 1024 * 1024) {
+            alert('⚠️ File too large. Max 200MB.');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('results').style.display = 'none';
+        
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Upload failed');
+            }
+            
+            const data = await response.json();
+            displayResults(data);
+            
+        } catch (error) {
+            alert('❌ Error: ' + error.message);
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    }
+
+    function displayResults(data) {
+        document.getElementById('results').style.display = 'block';
+        displayInsights(data.insights);
+        displayStatistics(data.statistics);
+        displayCharts(data.charts);
+        displayPreview(data.preview, data.columns);
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function displayInsights(insights) {
+        console.log('Formatting insights...');
+        
+        // Parse and format the markdown text
+        let html = insights
+            // Title
+            .replace(/^# (.+)$/gm, '<div class="insight-title">$1</div>')
+            // Section headers (##)
+            .replace(/^## (.+)$/gm, '<div class="insight-section">$1</div>')
+            // Subsection headers (###)
+            .replace(/^### (.+)$/gm, '<div class="insight-subsection">$1</div>')
+            // Bold text
+            .replace(/\*\*(.+?)\*\*/g, '<span class="insight-bold">$1</span>')
+            // Horizontal rules
+            .replace(/^---$/gm, '<hr class="insight-divider">')
+            // Bullet points
+            .replace(/^\*   (.+)$/gm, '<li>$1</li>')
+            .replace(/^\* (.+)$/gm, '<li>$1</li>')
+            // Wrap lists
+            .replace(/(<li>.*?<\/li>\s*)+/g, '<ul class="insight-list">$&</ul>')
+            // Tables (basic)
+            .replace(/^\|(.+)\|$/gm, (match) => {
+                const cells = match.split('|').filter(c => c.trim());
+                return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+            })
+            // Paragraphs
+            .replace(/\n\n/g, '</div><div class="insight-text">')
+            .replace(/\n/g, '<br>');
+        
+        // Wrap in paragraph
+        html = '<div class="insight-text">' + html + '</div>';
+        
+        document.getElementById('insightsContent').innerHTML = html;
+        console.log('✅ Insights formatted!');
+    }
+
+    function displayStatistics(stats) {
+        const overview = stats.overview;
+        const overviewHTML = `
+            <div class="stat-card"><h3>${overview.total_rows.toLocaleString()}</h3><p>Total Rows</p></div>
+            <div class="stat-card"><h3>${overview.total_columns}</h3><p>Total Columns</p></div>
+            <div class="stat-card"><h3>${overview.numerical_columns}</h3><p>Numerical Columns</p></div>
+            <div class="stat-card"><h3>${overview.total_missing_values}</h3><p>Missing Values</p></div>
+        `;
+        document.getElementById('statsOverview').innerHTML = overviewHTML;
+        
+        let detailsHTML = '<table><thead><tr><th>Column</th><th>Mean</th><th>Median</th><th>Std Dev</th><th>Min</th><th>Max</th><th>Missing</th></tr></thead><tbody>';
+        
+        for (const [column, values] of Object.entries(stats)) {
+            if (column !== 'overview') {
+                detailsHTML += `<tr>
+                    <td><strong>${column}</strong></td>
+                    <td>${values.mean?.toFixed(2) || 'N/A'}</td>
+                    <td>${values.median?.toFixed(2) || 'N/A'}</td>
+                    <td>${values.std?.toFixed(2) || 'N/A'}</td>
+                    <td>${values.min?.toFixed(2) || 'N/A'}</td>
+                    <td>${values.max?.toFixed(2) || 'N/A'}</td>
+                    <td>${values.missing}</td>
+                </tr>`;
+            }
+        }
+        
+        detailsHTML += '</tbody></table>';
+        document.getElementById('statsDetails').innerHTML = detailsHTML;
+    }
+
+    function displayCharts(charts) {
+        const container = document.getElementById('chartsContainer');
+        container.innerHTML = '';
+        
+        if (charts.length === 0) {
+            container.innerHTML = '<p>No visualizations available.</p>';
+            return;
+        }
+        
+        charts.forEach((chart, index) => {
+            const chartDiv = document.createElement('div');
+            chartDiv.className = 'chart-container';
+            chartDiv.id = `chart${index}`;
+            container.appendChild(chartDiv);
+            
+            const plotData = JSON.parse(chart.data);
+            Plotly.newPlot(`chart${index}`, plotData.data, plotData.layout, { responsive: true });
+        });
+    }
+
+    function displayPreview(data, columns) {
+        if (!data || data.length === 0) {
+            document.getElementById('previewContent').innerHTML = '<p>No preview available.</p>';
+            return;
+        }
+        
+        let html = '<table><thead><tr>';
+        columns.forEach(col => html += `<th>${col}</th>`);
+        html += '</tr></thead><tbody>';
+        
+        data.forEach(row => {
+            html += '<tr>';
+            columns.forEach(col => {
+                const value = row[col];
+                html += `<td>${value !== null && value !== undefined ? value : '-'}</td>`;
+            });
+            html += '</tr>';
+        });
+        
+        html += '</tbody></table>';
+        document.getElementById('previewContent').innerHTML = html;
+    }
+    
+    console.log('✅ Dataset Analyzer loaded - inline version');
+    </script>
+</body>
+</html> 

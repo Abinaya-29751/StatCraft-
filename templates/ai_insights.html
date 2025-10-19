@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Generated Insights - Dataset Analyzer</title>
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: url('/static/background.jpg') center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background:  rgba(255, 255, 255, 0.578);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    header { 
+        text-align: center; 
+        margin-bottom: 40px; 
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 20px;
+    }
+    
+    h1 { color: #000000; font-size: 2.5em; margin-bottom: 10px; }
+    .subtitle { color: #000000; font-size: 1.1em; }
+    
+    .navigation {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .nav-btn {
+        background: linear-gradient(135deg, #030d39 0%, #104b75 100%);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .nav-btn:hover { transform: translateY(-2px); }
+    
+    .download-btn {
+        background: linear-gradient(135deg, #030d39 0%, #104b75 100%);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .download-btn:hover { transform: translateY(-2px); }
+    
+    .section {
+        margin: 40px 0;
+        padding: 30px;
+        background:  rgba(255, 255, 255, 0.578);
+        border-radius: 10px;
+        border-left: 5px solid #051041;
+    }
+    
+    .section h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+    
+    #insightsContent {
+        background: white;
+        padding: 35px;
+        border-radius: 10px;
+        line-height: 1.9;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        text-align: left;
+    }
+    
+    .insight-title {
+        color: #140a5e;
+        font-size: 2em;
+        margin: 25px 0 15px 0;
+        padding-bottom: 10px;
+        border-bottom: 3px solid  #051041;
+    }
+    
+    .insight-section {
+        color:  #140a5e;
+        font-size: 1.5em;
+        margin: 25px 0 15px 0;
+        padding-left: 12px;
+        border-left: 5px solid #140a5e;
+        font-weight: 600;
+        text-align: left;
+    }
+    
+    .insight-subsection {
+        color: #555;
+        font-size: 1.3em;
+        margin: 20px 0 10px 0;
+        font-weight: 600;
+        text-align: left;
+    }
+    
+    .insight-text {
+        color: #444;
+        margin: 15px 0;
+        line-height: 1.8;
+        text-align: left;
+    }
+    
+    .insight-list {
+        margin: 15px 0 15px 30px;
+        list-style: none;
+    }
+    
+    .insight-list li {
+        margin: 12px 0;
+        padding-left: 25px;
+        position: relative;
+        line-height: 1.8;
+        color: #555;
+    }
+    
+    .insight-list li:before {
+        content: "▸";
+        color: #243373;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .insight-bold {
+        color: #0867eb;
+        font-weight: 600;
+    }
+    
+    .insight-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #667eea, transparent);
+        margin: 30px 0;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 60px 20px;
+        display: none;
+    }
+    
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #091c73;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .no-data {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    @media (max-width: 768px) {
+        .container { padding: 20px; }
+        h1 { font-size: 1.8em; }
+        .navigation { flex-direction: column; align-items: center; }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>StatCraft - Craft perfect analysis</h1>
+            <p class="subtitle">Intelligent analysis of your dataset</p>
+        </header>
+        
+        <div class="navigation">
+            <a href="/" class="nav-btn"> Home</a>
+            <button class="nav-btn" onclick="goToStats()"> Statistical Analysis</button>
+            <button class="nav-btn" onclick="goToVisualization()"> Visualizations</button>
+            <button class="nav-btn" onclick="goToPreview()">Data Preview</button>
+            <button class="download-btn" onclick="downloadReport()"> Download HTML</button>
+            <button class="download-btn" onclick="downloadPDF()"> Download TXT</button>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading StatCraft insights...</p>
+        </div>
+        
+        <div id="content">
+            <section class="section insights-section">
+                <h2> StatCraft Insights</h2>
+                <div id="insightsContent" class="no-data">
+                    <p>No analysis data available. Please upload a dataset first.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <script>
+    let analysisData = null;
+    
+    // Load data from sessionStorage
+    window.addEventListener('load', function() {
+        const storedData = sessionStorage.getItem('analysisData');
+        if (storedData) {
+            analysisData = JSON.parse(storedData);
+            displayInsights();
+        } else {
+            // If no data, redirect to home
+            window.location.href = '/';
+        }
+    });
+    
+    function displayInsights() {
+        if (!analysisData || !analysisData.insights) {
+            document.getElementById('insightsContent').innerHTML = '<p>No insights available.</p>';
+            return;
+        }
+        
+        const insights = analysisData.insights;
+        
+        // Parse and format the markdown text
+        let html = insights
+            // Title
+            .replace(/^# (.+)$/gm, '<div class="insight-title">$1</div>')
+            // Section headers (##)
+            .replace(/^## (.+)$/gm, '<div class="insight-section">$1</div>')
+            // Subsection headers (###)
+            .replace(/^### (.+)$/gm, '<div class="insight-subsection">$1</div>')
+            // Bold text
+            .replace(/\*\*(.+?)\*\*/g, '<span class="insight-bold">$1</span>')
+            // Horizontal rules
+            .replace(/^---$/gm, '<hr class="insight-divider">')
+            // Bullet points
+            .replace(/^\*   (.+)$/gm, '<li>$1</li>')
+            .replace(/^\* (.+)$/gm, '<li>$1</li>')
+            // Wrap lists
+            .replace(/(<li>.*?<\/li>\s*)+/g, '<ul class="insight-list">$&</ul>')
+            // Tables (basic)
+            .replace(/^\|(.+)\|$/gm, (match) => {
+                const cells = match.split('|').filter(c => c.trim());
+                return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+            })
+            // Paragraphs
+            .replace(/\n\n/g, '</div><div class="insight-text">')
+            .replace(/\n/g, '<br>');
+        
+        // Wrap in paragraph
+        html = '<div class="insight-text">' + html + '</div>';
+        
+        document.getElementById('insightsContent').innerHTML = html;
+    }
+    
+    function goToStats() {
+        if (analysisData) {
+            sessionStorage.setItem('analysisData', JSON.stringify(analysisData));
+            window.location.href = '/statistical-analysis';
+        }
+    }
+    
+    function goToVisualization() {
+        if (analysisData) {
+            sessionStorage.setItem('analysisData', JSON.stringify(analysisData));
+            window.location.href = '/visualizations';
+        }
+    }
+    
+    function goToPreview() {
+        if (analysisData) {
+            sessionStorage.setItem('analysisData', JSON.stringify(analysisData));
+            window.location.href = '/data-preview';
+        }
+    }
+    
+    async function downloadReport() {
+        if (!analysisData) {
+            alert('No analysis data available to download.');
+            return;
+        }
+        
+        try {
+            console.log('Sending data for report generation:', analysisData);
+            
+            const response = await fetch('/download-report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(analysisData)
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server error:', errorText);
+                throw new Error(`Download failed: ${response.status} - ${errorText}`);
+            }
+            
+            // Get filename from response headers
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = contentDisposition 
+                ? contentDisposition.split('filename=')[1] 
+                : `dataset_analysis_report_${new Date().toISOString().split('T')[0]}.txt`;
+            
+            // Create blob and download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Error downloading report: ' + error.message);
+        }
+    }
+    
+    async function downloadPDF() {
+        if (!analysisData) {
+            alert('No analysis data available to download.');
+            return;
+        }
+        
+        try {
+            console.log('Sending data for TXT report generation:', analysisData);
+            
+            const response = await fetch('/download-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(analysisData)
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server error:', errorText);
+                throw new Error(`TXT download failed: ${response.status} - ${errorText}`);
+            }
+            
+            // Get filename from response headers
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = contentDisposition 
+                ? contentDisposition.split('filename=')[1] 
+                : `dataset_analysis_report_${new Date().toISOString().split('T')[0]}.txt`;
+            
+            // Create blob and download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+        } catch (error) {
+            console.error('TXT download error:', error);
+            alert('Error downloading TXT report: ' + error.message);
+        }
+    }
+    
+    </script>
+</body>
+</html>
