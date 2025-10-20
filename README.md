@@ -284,4 +284,38 @@ gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
   - Webhook support for analysis completion
   - Batch processing endpoints
 
+## ScreenShots
+
+<img width="940" height="417" alt="image" src="https://github.com/user-attachments/assets/87c6227e-1015-43d9-a4ea-a3560e38a185" />
+<img width="940" height="409" alt="image" src="https://github.com/user-attachments/assets/1db2aa0f-98cd-4cc5-b690-68b749f3e75e" />
+<img width="940" height="438" alt="image" src="https://github.com/user-attachments/assets/620122f4-d738-40c3-b4ea-6d6a38c2ad10" />
+<img width="940" height="376" alt="image" src="https://github.com/user-attachments/assets/04634909-66d8-446a-b0ac-490a3efe9ed5" />
+<img width="940" height="430" alt="image" src="https://github.com/user-attachments/assets/9dcd7150-3963-4a7c-949a-82d26434fc61" />
+<img width="940" height="416" alt="image" src="https://github.com/user-attachments/assets/6ae2e393-e5cf-4763-85f4-2bdd00f84f8f" />
+<img width="940" height="448" alt="image" src="https://github.com/user-attachments/assets/3c8e3004-9d63-4c51-a7ed-ca45a15f96d5" />
+<img width="940" height="191" alt="image" src="https://github.com/user-attachments/assets/822c35f0-3974-4446-8db3-576c4b867f92" />
+<img width="940" height="379" alt="image" src="https://github.com/user-attachments/assets/cbf0aff8-7f3e-4697-96a4-a8689b4f13f4" />
+<img width="940" height="348" alt="image" src="https://github.com/user-attachments/assets/f5540b0d-66ce-4ffc-9507-c2728797c2cc" />
+<img width="940" height="404" alt="image" src="https://github.com/user-attachments/assets/b8b1b35e-0083-44ac-97f0-fc9ec8d221dc" />
+<img width="940" height="399" alt="image" src="https://github.com/user-attachments/assets/9e9e0cec-5242-4513-80ca-19ca7a0b988f" />
+<img width="940" height="468" alt="image" src="https://github.com/user-attachments/assets/02d389fe-0462-4bea-abb6-effab89ab69c" />
+
+## Demo Video
+
+[![Watch the demo](https://img.icons8.com/ios-filled/100/play-button-circled.png)](https://drive.google.com/file/d/1sx1IZzA5T421tTjMzCJnwryeF398Pkyc/view)
+
+> 📱 Click the image above to watch the demo.
+
+> This video demonstrates the key features of the application.
+
+
+
+
+
+
+
+
+
+
+
 **Built with ❤️ using FastAPI, Pandas, and Google Gemini AI**
