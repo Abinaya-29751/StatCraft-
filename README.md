@@ -1,8 +1,8 @@
-# 📊 Automated Dataset Analyzer
+# Automated Dataset Analyzer
 
 An AI-powered web application for automated dataset analysis, statistical insights, and interactive visualizations. Upload your CSV or Excel files and get comprehensive analysis with AI-generated insights, statistical summaries, and beautiful visualizations.
 
-## 🎯 Project Overview and Objectives
+## Project Overview and Objectives
 
 This application provides automated data analysis capabilities for researchers, data scientists, and business analysts who need quick insights from their datasets. The tool combines statistical analysis with AI-powered insights to deliver comprehensive reports that would typically require hours of manual work.
 
@@ -12,7 +12,7 @@ This application provides automated data analysis capabilities for researchers, 
 - **AI-Enhanced Reporting**: Generate intelligent insights and recommendations using Google Gemini AI
 - **Interactive Experience**: Deliver results through an intuitive web interface with interactive charts
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
 - **File Upload Support**: CSV and Excel files (up to 200MB)
@@ -29,7 +29,7 @@ This application provides automated data analysis capabilities for researchers, 
 - **Outlier Detection**: Statistical outlier identification using IQR method
 - **Correlation Analysis**: Heatmap visualization of variable relationships
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend
 - **FastAPI**: Modern, fast web framework for building APIs
@@ -45,17 +45,12 @@ This application provides automated data analysis capabilities for researchers, 
 - **JavaScript**: Interactive client-side functionality
 - **Jinja2**: Template engine for dynamic content
 
-### Deployment
-- **Gunicorn**: WSGI HTTP Server
-- **Uvicorn**: ASGI server for FastAPI
-- **Heroku**: Cloud deployment platform
-
 ### Dependencies
 - **python-multipart**: File upload handling
 - **openpyxl**: Excel file processing
 - **python-dotenv**: Environment variable management
 
-## 📦 Setup and Installation Instructions
+##  Setup and Installation Instructions
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -66,8 +61,8 @@ This application provides automated data analysis capabilities for researchers, 
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/MULTIMETA/dataset-analyzer.git
-cd dataset-analyzer
+git clone https://github.com/Abinaya-29751/StatCraft-.git
+cd StatCraft
 ```
 
 2. **Create a virtual environment:**
@@ -116,7 +111,7 @@ pip install gunicorn
 gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
 ```
 
-## 🔌 API Endpoints Documentation
+## API Endpoints Documentation
 
 ### Core Endpoints
 
@@ -226,67 +221,7 @@ gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
   "detail": "Error message description"
 }
 ```
-
-## 🚀 Deployment Instructions
-
-### Heroku Deployment
-
-1. **Install Heroku CLI** and login:
-```bash
-heroku login
-```
-
-2. **Create Heroku app:**
-```bash
-heroku create your-app-name
-```
-
-3. **Set environment variables:**
-```bash
-heroku config:set GOOGLE_API_KEY=your_google_gemini_api_key
-```
-
-4. **Deploy:**
-```bash
-git push heroku main
-```
-
-5. **Open application:**
-```bash
-heroku open
-```
-
-### Docker Deployment
-
-1. **Create Dockerfile:**
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-EXPOSE 8000
-
-CMD ["gunicorn", "app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
-```
-
-2. **Build and run:**
-```bash
-docker build -t dataset-analyzer .
-docker run -p 8000:8000 -e GOOGLE_API_KEY=your_key dataset-analyzer
-```
-
-### Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GOOGLE_API_KEY` | Google Gemini API key for AI insights | Yes |
-| `PORT` | Server port (default: 8000) | No |
-| `HOST` | Server host (default: 0.0.0.0) | No |
-
-## ⚠️ Known Limitations and Future Improvements
+## Known Limitations and Future Improvements
 
 ### Current Limitations
 
@@ -316,7 +251,7 @@ docker run -p 8000:8000 -e GOOGLE_API_KEY=your_key dataset-analyzer
 
 ### Planned Future Improvements
 
-#### Short-term (Next 3 months)
+#### Short-term 
 - [ ] **Enhanced File Support**
   - Add support for JSON, Parquet, and SQLite files
   - Implement file format auto-detection
@@ -332,7 +267,7 @@ docker run -p 8000:8000 -e GOOGLE_API_KEY=your_key dataset-analyzer
   - Implement drag-and-drop file upload
   - Add export functionality for reports (PDF, Word)
 
-#### Medium-term (3-6 months)
+#### Medium-term 
 - [ ] **Advanced Analytics**
   - Machine learning model integration
   - Time series analysis capabilities
@@ -348,41 +283,5 @@ docker run -p 8000:8000 -e GOOGLE_API_KEY=your_key dataset-analyzer
   - RESTful API with comprehensive documentation
   - Webhook support for analysis completion
   - Batch processing endpoints
-
-#### Long-term (6+ months)
-- [ ] **Enterprise Features**
-  - Multi-tenant architecture
-  - Advanced security and compliance
-  - Integration with popular BI tools
-  - Custom dashboard creation
-
-- [ ] **AI/ML Enhancements**
-  - Custom model training on user data
-  - Automated feature engineering
-  - Predictive analytics capabilities
-  - Natural language query interface
-
-- [ ] **Scalability Improvements**
-  - Microservices architecture
-  - Kubernetes deployment support
-  - Auto-scaling capabilities
-  - Global CDN integration
-
-### Contributing
-
-We welcome contributions! Please see our contributing guidelines for:
-- Code style and standards
-- Testing requirements
-- Pull request process
-- Issue reporting
-
-### Support
-
-For technical support or feature requests:
-- Create an issue on GitHub
-- Contact: [support@multimeta.com]
-- Documentation: [https://github.com/MULTIMETA/dataset-analyzer]
-
----
 
 **Built with ❤️ using FastAPI, Pandas, and Google Gemini AI**
